@@ -86,7 +86,7 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
 
         public void Connect()
         {
-            
+
         }
 
         public void Disconnect()
@@ -97,6 +97,7 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
         #region Public API
         public List<IScriptMarket> GetMarkets()
         {
+            Console.Out.WriteLine("GetMarkets");
             List<IScriptMarket> markets = null;
 
             try
@@ -118,12 +119,15 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
 
         public List<IScriptMarket> GetMarginMarkets()
         {
+            Console.Out.WriteLine("GetMarginMarkets");
+
             return null;
         }
 
         public IScriptTick GetTicker(IScriptMarket market)
         {
             IScriptTick ticker = null;
+            Console.Out.WriteLine("GetTicker");
 
             try
             {
@@ -148,12 +152,14 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
 
         public List<IScriptTick> GetAllTickers()
         {
+            Console.Out.WriteLine("GetAllTickers");
             return null;
         }
 
         public IScriptOrderbook GetOrderbook(IScriptMarket market)
         {
             IScriptOrderbook orderbook = null;
+            Console.Out.WriteLine("GetOrderbook");
 
             try
             {
@@ -179,12 +185,14 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
 
         public List<IScriptOrderbook> GetAllOrderbooks()
         {
+            Console.Out.WriteLine("GetAllOrderbooks");
             return null;
         }
 
         public IScriptLastTrades GetLastTrades(IScriptMarket market)
         {
             LastTradesContainer trades = null;
+            Console.Out.WriteLine("GetLastTrades");
 
             try
             {
@@ -224,6 +232,7 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
         public Dictionary<string, decimal> GetWallet()
         {
             Dictionary<string, decimal> wallet = null;
+            Console.Out.WriteLine("GetWallet");
 
             try
             {
@@ -248,12 +257,14 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
 
         public IScriptMarginWallet GetMarginWallet()
         {
+            Console.Out.WriteLine("GetMarginWallet");
             return null;
         }
 
         public List<IScriptOrder> GetOpenOrders()
         {
             List<IScriptOrder> orders = null;
+            Console.Out.WriteLine("GetOpenOrders");
 
             try
             {
@@ -286,12 +297,14 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
 
         public List<IScriptPosition> GetPositions()
         {
+            Console.Out.WriteLine("GetPositions");
             return null;
         }
 
         public List<IScriptOrder> GetTradeHistory()
         {
             List<IScriptOrder> trades = null;
+            Console.Out.WriteLine("GetTradeHistory");
 
             try
             {
@@ -329,6 +342,17 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
                 int side = (direction == ScriptedOrderType.Buy) ? 0 : 1;
                 int type = (isMarketOrder) ? ApexOrderType.Market : ApexOrderType.Limit;
 
+                Console.Out.WriteLine("instrument");
+                Console.Out.WriteLine(instrument.InstrumentId.ToString());
+                Console.Out.WriteLine("side");
+                Console.Out.WriteLine(side.ToString());
+                Console.Out.WriteLine("amount");
+                Console.Out.WriteLine(amount.ToString());
+                Console.Out.WriteLine("type");
+                Console.Out.WriteLine(type.ToString());
+                Console.Out.WriteLine("price");
+                Console.Out.WriteLine(price.ToString());
+
                 JObject response = (JObject)Call("SendOrder", new ApexSendOrder(instrument.InstrumentId, 1, _userInfo.AccountId, side, amount.ToString(), type, price.ToString()));
 
                 result = response.Value<string>("OrderId");
@@ -339,6 +363,7 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
 
             return result;
         }
+
         public string PlaceOrder(IScriptMarket market, ScriptedLeverageOrderType direction, decimal price, decimal amount, decimal leverage, bool isMarketOrder, string template = "", bool isHiddenOrder = false)
         {
             Console.Out.WriteLine("PlaceOrder2");
@@ -349,6 +374,7 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
         public bool CancelOrder(IScriptMarket market, string orderId, bool isBuyOrder)
         {
             var result = false;
+            Console.Out.WriteLine("CancelOrder");
 
             try
             {
@@ -495,7 +521,7 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
 
         #region Reset API Functions
         private void SocketConnected(object sender, EventArgs e)
-        {            
+        {
             _wsOpened.Set();
         }
 
@@ -616,7 +642,7 @@ namespace Haasonline.Public.ExchangeDriver.Bittrex
             {
                 _authenticated = true;
                 _userInfo = new ApexUserInfo(response.Value<JObject>("User"));
-                Call("SubscribeAccountEvents", )
+                Call("SubscribeAccountEvents", null);
             } else
             {
                 throw new Exception("Failed to authenticate");
